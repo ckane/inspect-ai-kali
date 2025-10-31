@@ -1,0 +1,7 @@
+/*.json
+/.env.*
+/logs/
+/tmp/
+__pycache__
+.venv
+.python-version

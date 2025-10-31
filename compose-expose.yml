@@ -1,0 +1,54 @@
+services:
+  default:
+    build:
+      context: .
+      dockerfile: kali/Dockerfile
+    init: true
+    x-default: true
+    command: tail -F /dev/null
+    ports:
+      - 15555:15555
+    networks:
+      - mynet
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+    #  victim1:
+    #    build:
+    #      context: .
+    #      dockerfile: victim1/Dockerfile
+    #    networks:
+    #      - mynet
+    #  victim2:
+    #    image: vulnerables/phpldapadmin-remote-dump:latest
+    #    networks:
+    #      - mynet
+  # victim3:
+  #  build:
+  #    context: .
+  #    dockerfile: juice_shop/Dockerfile
+  #  networks:
+  #    - mynet
+  #victim4:
+  #  image: sasanlabs/owasp-vulnerableapp:1.12.11
+  #  networks:
+  #    - mynet
+  #victim6:
+  #  image: sasanlabs/owasp-vulnerableapp-php:latest
+  #  networks:
+  #    - mynet
+  #victim5:
+  #  image: sasanlabs/owasp-vulnerableapp-facade:1.2.1
+  #  networks:
+  #    - mynet
+  victim7:
+    #image: vulnerables/cve-2014-6271
+    build:
+      context: .
+      dockerfile: sshock/Dockerfile
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    driver: bridge
