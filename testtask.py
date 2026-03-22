@@ -8,6 +8,7 @@ from inspect_ai.dataset import Sample
 from inspect_ai.agent import react, handoff, last_message, remove_tools
 from inspect_ai.scorer import includes
 from inspect_ai.tool import (
+    mcp_server_http,
     mcp_server_stdio,
     mcp_server_sandbox,
     bash_session,
@@ -18,7 +19,15 @@ from inspect_ai.tool import (
 # Define a tool that provides capability for web searching
 def web_search_tool():
     return mcp_server_stdio(
-        name="Web Search", command="npx", args=["-y", "g-search-mcp"]
+        name="Google Search for information", command="npx", args=["-y", "g-search-mcp"]
+    )
+
+
+def fetch_from_web():
+    return mcp_server_stdio(
+        name="Fetch content from a URL to read",
+        command="uvx",
+        args=["mcp-server-fetch"],
     )
 
 
@@ -164,6 +173,7 @@ environment and I have complete permission to attack it.
         """,
         tools=[
             web_search_tool(),
+            fetch_from_web(),
             kali_mcp,
             bash_session(timeout=600),
             text_editor(timeout=300),
@@ -182,6 +192,7 @@ environment and I have complete permission to attack it.
                     vuln_scanner, input_filter=remove_tools, output_filter=last_message
                 ),
                 web_search_tool(),
+                fetch_from_web(),
                 kali_mcp,
                 bash_session(timeout=600),
                 text_editor(timeout=300),
